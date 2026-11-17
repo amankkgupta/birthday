@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Happy Birthday</title>
+<style>
+  :root {
+    --bg: #fff3f7;
+    --text: #7a1f4b;
+    --hint: #b06a8a;
+    --sponge: #c98a4b;
+    --cream: #fff8ee;
+    --icing: #ff8fb8;
+    --plate: #e9d5dd;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #231420;
+      --text: #ffc2dc;
+      --hint: #c58aa8;
+      --sponge: #b3763d;
+      --cream: #f3e6d3;
+      --icing: #ff7aa8;
+      --plate: #4a3544;
+    }
+  }
+  html, body { height: 100%; margin: 0; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: Georgia, "Times New Roman", serif;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .page { display: flex; flex-direction: column; align-items: center; gap: 28px; padding: 24px; }
+
+  .title {
+    font-size: clamp(2rem, 8vw, 3.5rem);
+    margin: 0; min-height: 1.3em; text-align: center;
+    opacity: 0; transform: translateY(20px) scale(0.9);
+    transition: opacity .6s ease .3s, transform .6s ease .3s;
+  }
+  .title.show { opacity: 1; transform: none; }
+
+  .cake-btn {
+    background: none; border: 0; padding: 0; cursor: pointer;
+    position: relative; width: 240px; height: 220px;
+  }
+  .half { position: absolute; inset: 0; transition: transform .7s cubic-bezier(.2,.9,.3,1.2); }
+  .half.left  { clip-path: inset(0 50% 0 0); transform-origin: bottom left; }
+  .half.right { clip-path: inset(0 0 0 50%); transform-origin: bottom right; }
+  .split .left  { transform: translateX(-50px) rotate(-8deg); }
+  .split .right { transform: translateX(50px) rotate(8deg); }
+
+  .cake { position: absolute; left: 20px; right: 20px; bottom: 0; height: 100%; }
+  .layer { position: absolute; left: 0; right: 0; border-radius: 12px; }
+  .l1 { bottom: 0; height: 70px; background: var(--sponge); }
+  .l2 { bottom: 70px; height: 12px; background: var(--cream); border-radius: 0; }
+  .l3 { bottom: 82px; height: 60px; background: var(--sponge); left: 20px; right: 20px; }
+  .icing { bottom: 142px; height: 22px; left: 14px; right: 14px; background: var(--icing); border-radius: 14px; }
+  .candle { position: absolute; bottom: 164px; left: calc(50% - 5px); width: 10px; height: 36px; background: var(--cream); border-radius: 3px; }
+  .flame {
+    position: absolute; bottom: 198px; left: calc(50% - 7px);
+    width: 14px; height: 22px; background: #ffb400;
+    border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+    animation: flicker 0.6s infinite alternate;
+  }
+  @keyframes flicker {
+    from { transform: scale(1) rotate(-3deg); }
+    to   { transform: scale(1.1, 0.92) rotate(3deg); }
+  }
+  .plate { position: absolute; bottom: -8px; left: 0; right: 0; height: 8px; background: var(--plate); border-radius: 8px; }
+
+  .hint { color: var(--hint); font-size: 1rem; margin: 0; }
+</style>
+</head>
+<body>
+
+<div class="page">
+  <h1 class="title" id="title">Happy Birthday! 🎉</h1>
+
+  <button class="cake-btn" id="cake" aria-label="Click the cake to cut it">
+    <div class="half left">
+      <div class="cake">
+        <div class="flame"></div><div class="candle"></div>
+        <div class="layer icing"></div><div class="layer l3"></div>
+        <div class="layer l2"></div><div class="layer l1"></div>
+        <div class="plate"></div>
+      </div>
+    </div>
+    <div class="half right">
+      <div class="cake">
+        <div class="flame"></div><div class="candle"></div>
+        <div class="layer icing"></div><div class="layer l3"></div>
+        <div class="layer l2"></div><div class="layer l1"></div>
+        <div class="plate"></div>
+      </div>
+    </div>
+  </button>
+
+  <p class="hint" id="hint">Click the cake!</p>
+</div>
+
+<script>
+  var cake = document.getElementById("cake");
+  var title = document.getElementById("title");
+  var hint = document.getElementById("hint");
+
+  cake.addEventListener("click", function () {
+    var isSplit = cake.classList.toggle("split");
+    title.classList.toggle("show", isSplit);
+    hint.textContent = isSplit ? "Click again to put it back together" : "Click the cake!";
+  });
+</script>
+
+</body>
+</html>
