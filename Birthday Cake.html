@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Happy Birthday</title>
+<style>
+  :root {
+    box-sizing: border-box;
+    padding-top: env(safe-area-inset-top, 0px);
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+    --bg: #fff3f7;
+    --text: #7a1f4b;
+    --hint: #b06a8a;
+    --sponge: #c98a4b;
+    --cream: #fff8ee;
+    --icing: #ff8fb8;
+    --plate: #e9d5dd;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #231420;
+      --text: #ffc2dc;
+      --hint: #c58aa8;
+      --sponge: #b3763d;
+      --cream: #f3e6d3;
+      --icing: #ff7aa8;
+      --plate: #4a3544;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #231420; --text: #ffc2dc; --hint: #c58aa8;
+    --sponge: #b3763d; --cream: #f3e6d3; --icing: #ff7aa8; --plate: #4a3544;
+  }
+  html, body { height: 100%; margin: 0; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: Georgia, "Times New Roman", serif;
+    display: flex; align-items: center; justify-content: center;
+  }
+  #root { width: 100%; }
+  .page { display: flex; flex-direction: column; align-items: center; gap: 28px; padding: 24px; }
+
+  .title {
+    font-size: clamp(2rem, 8vw, 3.5rem);
+    margin: 0; min-height: 1.3em; text-align: center;
+    opacity: 0; transform: translateY(20px) scale(0.9);
+    transition: opacity .6s ease .3s, transform .6s ease .3s;
+  }
+  .title.show { opacity: 1; transform: none; }
+
+  .cake-btn {
+    background: none; border: 0; padding: 0; cursor: pointer;
+    position: relative; width: 240px; height: 220px;
+  }
+  .half { position: absolute; inset: 0; transition: transform .7s cubic-bezier(.2,.9,.3,1.2); }
+  .half.left  { clip-path: inset(0 50% 0 0); transform-origin: bottom left; }
+  .half.right { clip-path: inset(0 0 0 50%); transform-origin: bottom right; }
+  .split .left  { transform: translateX(-50px) rotate(-8deg); }
+  .split .right { transform: translateX(50px) rotate(8deg); }
+
+  .cake { position: absolute; left: 20px; right: 20px; bottom: 0; height: 100%; }
+  .layer { position: absolute; left: 0; right: 0; border-radius: 12px; }
+  .l1 { bottom: 0;  height: 70px; background: var(--sponge); }
+  .l2 { bottom: 70px; height: 12px; background: var(--cream); border-radius: 0; }
+  .l3 { bottom: 82px; height: 60px; background: var(--sponge); left: 20px; right: 20px; }
+  .icing { bottom: 142px; height: 22px; left: 14px; right: 14px; background: var(--icing); border-radius: 14px; }
+  .candle { position: absolute; bottom: 164px; left: calc(50% - 5px); width: 10px; height: 36px; background: var(--cream); border-radius: 3px; }
+  .flame {
+    position: absolute; bottom: 198px; left: calc(50% - 7px);
+    width: 14px; height: 22px; background: #ffb400; border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+    animation: flicker 0.6s infinite alternate;
+  }
+  @keyframes flicker { from { transform: scale(1) rotate(-3deg); } to { transform: scale(1.1, 0.92) rotate(3deg); } }
+  .plate { position: absolute; bottom: -8px; left: 0; right: 0; height: 8px; background: var(--plate); border-radius: 8px; }
+
+  .hint { color: var(--hint); font-size: 1rem; margin: 0; }
+</style>
+</head>
+<body>
+<div id="root"></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.3.1/umd/react.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.3.1/umd/react-dom.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.26.0/babel.min.js"></script>
+<script type="text/babel">
+  const { useState } = React;
+
+  function Cake() {
+    return (
+      <div className="cake">
+        <div className="flame"></div>
+        <div className="candle"></div>
+        <div className="layer icing"></div>
+        <div className="layer l3"></div>
+        <div className="layer l2"></div>
+        <div className="layer l1"></div>
+        <div className="plate"></div>
+      </div>
+    );
+  }
+
+  function App() {
+    const [split, setSplit] = useState(false);
+
+    return (
+      <div className="page">
+        <h1 className={"title" + (split ? " show" : "")}>Happy Birthday! 🎉</h1>
+
+        <button
+          className={"cake-btn" + (split ? " split" : "")}
+          onClick={() => setSplit(!split)}
+          aria-label="Click the cake to cut it"
+        >
+          <div className="half left"><Cake /></div>
+          <div className="half right"><Cake /></div>
+        </button>
+
+        <p className="hint">{split ? "Click again to put it back together" : "Click the cake!"}</p>
+      </div>
+    );
+  }
+
+  ReactDOM.createRoot(document.getElementById("root")).render(<App />);
+</script>
+</body>
+</html>
